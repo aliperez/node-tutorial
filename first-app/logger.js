@@ -11,6 +11,6 @@ function secondFunction(message) {
     console.log(message);
 }
 
-module.exports.log = log;
-module.exports.secondFunction = secondFunction;
-module.exports.url = url;
+module.exports = log;
+// module.exports.secondFunction = secondFunction;
+// module.exports.url = url;
