@@ -1,9 +1,4 @@
 
-function sayHello(name) {
-    console.log('Hello ' + name);
-}
+var logger = require('./logger');
 
-// sayHello('Bob');
-
-// shows an error bc window is only available in browser
-console.log(window);
+console.log(logger);
