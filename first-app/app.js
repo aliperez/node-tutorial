@@ -1,13 +1,10 @@
 
-const os = require('os');
+const fs = require('fs');
 
-var totalMemory = os.totalmem();
-var freeMemory = os.freemem();
+// const files = fs.readdirSync('./');
+// console.log(files);
 
-// Old fashioned concatination 
-console.log('Total Memory: ' + totalMemory);
-console.log('Free Memory: ' + freeMemory);
-
-// Template string
-console.log(`Total Memory: ${totalMemory}`);
-console.log(`Free Memory: ${freeMemory}`);
+fs.readdir('$', function(err, files){
+    if (err) console.log('Error', err);
+    else console.log('Result', files);
+});
