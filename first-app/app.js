@@ -3,11 +3,15 @@
 // Class is a container for properties and functions (methods)
 const EventEmitter = require('events');
 
-const logger = require('./logger');
+// change to uppercase Logger bc its a class now
+const Logger = require('./logger');
+// create an instance of the class
+const logger = new Logger();
+
 
 // this emitter is an object
 // example: human is a class, John is an object
-const emitter = new EventEmitter();
+// const emitter = new EventEmitter();
 
 // Order matters, must emit after listener 
 
@@ -22,8 +26,11 @@ const emitter = new EventEmitter();
 // emitter.emit('messageLogged', { id: 1, url: 'http://'});
 
 // lisener for emitter in logger.js
-emitter.on('messageLogged', (arg) => { //e, eventArg
+logger.on('logging', (arg) => { //e, eventArg
     console.log('Listener called', arg);
 })
+
+// call the log function from within the class instance
+logger.log('my message input from app.js');
 
 
