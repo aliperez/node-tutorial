@@ -1,36 +1,30 @@
 
-// Convention first letter of every word uppercase bc it's a class
-// Class is a container for properties and functions (methods)
-const EventEmitter = require('events');
+const http = require('http');
 
-// change to uppercase Logger bc its a class now
-const Logger = require('./logger');
-// create an instance of the class
-const logger = new Logger();
+// this server is an event emitter
+// in real world not going to use http module to build backend service
+// because as we add more routes this code becomes more complex
+// instead use a framework called express
+// express is built on top of the http module in node 
+// const server = http.createServer((req, res) => {
+//     if (req.url === '/') {
+//         res.write('Hello world');
+//         res.end();
+//     }
 
+//     if (req.url === '/api/courses') {
+//         res.write(JSON.stringify([1, 2, 3]));
+//         res.end();
+//     }
+// });
 
-// this emitter is an object
-// example: human is a class, John is an object
-// const emitter = new EventEmitter();
-
-// Order matters, must emit after listener 
-
-// Register a listener
-// addListener same as on
-// emitter.on('messageLogged', (arg) => { //e, eventArg
-//     console.log('Listener called', arg);
+// connection is the name of the event in the documentation
+// in real world you wouldn't respond to the connection event
+    // to build an http service, this is low level 
+// server.on('connection', (socket) => {
+//     console.log('New connection...');
 // })
 
-// Raised an event
-// object is referred to as the event argument
-// emitter.emit('messageLogged', { id: 1, url: 'http://'});
+server.listen(3000);
 
-// lisener for emitter in logger.js
-logger.on('logging', (arg) => { //e, eventArg
-    console.log('Listener called', arg);
-})
-
-// call the log function from within the class instance
-logger.log('my message input from app.js');
-
-
+console.log('Listening on port 3000...');
