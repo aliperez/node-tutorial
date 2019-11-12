@@ -32,9 +32,39 @@ async function createCourse() {
 }
 
 async function getCourses() {
+    // comparison operators
+    // eq: equal
+    // ne: not equal
+    // gt: greater than, lt
+    // gte: greater than or equal to, lte
+    // in: in
+    // nin: not in
+    // use $ to indicate operator, see example below
+
+    // logical operators
+    // or
+    // and
+
+    // regular expressions: more control over filtering strings
+    // ^ means string that starts with
+    // $ means end of a string
+    // append i for not case sensitive
+    // .* means any number of characters before or after
+
     const courses = await Course
-        .find({ author: 'Mosh', isPublished: true })
-        .limit(10)
+        // .find({ author: 'Mosh', isPubslished: true })
+        // .find({ price: { $gte: 10, $lte: 20 } })
+        // .find({ price: { $in: [10, 15, 20] } })
+        // .find()
+        // .or([ {author: 'Mosh' }, { isPublished: true } ])
+        // .and([ {author: 'Mosh' }, { isPublished: true } ])
+        // starts with mosh
+        // .find( { author: /^Mosh/})
+        // ends with Hamedani
+        // .find({ author: /Hamedani$/i })
+        // contains Mosh
+        .find({ author: /.*Mosh.*/i })
+        .limit(10) 
         // ascending order: 1, descending order: -1
         .sort({ name: 1 })
         // get only the name and tag properties
