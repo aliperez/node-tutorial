@@ -21,9 +21,9 @@ const Course = mongoose.model('Course', courseSchema);
 async function createCourse() {
     // camel case bc course is an object 
     const course = new Course({
-        name: 'Angular Course',
+        name: 'Fourth Course',
         author: 'Mosh',
-        tags: ['angular', 'frontend'],
+        tags: ['fourth', '4th'],
         isPublished: true
     });
     
@@ -51,8 +51,14 @@ async function getCourses() {
     // append i for not case sensitive
     // .* means any number of characters before or after
 
+    const pageNumber = 2;
+    const pageSize = 3;
+    // Real world example:
+    // /api/courses?pageNumber=2&pageSize=10
+
     const courses = await Course
-        // .find({ author: 'Mosh', isPubslished: true })
+        // .find({})  
+        .find({ author: 'Mosh', isPublished: true })
         // .find({ price: { $gte: 10, $lte: 20 } })
         // .find({ price: { $in: [10, 15, 20] } })
         // .find()
@@ -63,12 +69,14 @@ async function getCourses() {
         // ends with Hamedani
         // .find({ author: /Hamedani$/i })
         // contains Mosh
-        .find({ author: /.*Mosh.*/i })
-        .limit(10) 
+        // .find({ author: /.*Mosh.*/i })
+        .skip((pageNumber - 1) * pageSize)
+        .limit(pageSize) 
         // ascending order: 1, descending order: -1
-        .sort({ name: 1 })
+        // .sort({ name: 1 })
         // get only the name and tag properties
-        .select({ name: 1, tags: 1 });
+        // .select({ name: 1, tags: 1 });
+        // .count();
     console.log(courses);
 }
 
