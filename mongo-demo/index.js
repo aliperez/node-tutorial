@@ -52,7 +52,7 @@ async function getCourses() {
     // .* means any number of characters before or after
 
     const pageNumber = 2;
-    const pageSize = 3;
+    const pageSize = 10;
     // Real world example:
     // /api/courses?pageNumber=2&pageSize=10
 
@@ -73,15 +73,67 @@ async function getCourses() {
         .skip((pageNumber - 1) * pageSize)
         .limit(pageSize) 
         // ascending order: 1, descending order: -1
-        // .sort({ name: 1 })
+        .sort({ name: 1 })
         // get only the name and tag properties
-        // .select({ name: 1, tags: 1 });
+        .select({ name: 1, tags: 1 });
         // .count();
     console.log(courses);
 }
 
+async function updateCourse(id) {
+    // Approach: Query first, use this method when you want to validate the change first
+    // findById()
+    // Modify it's properties
+    // save()
+
+    // const course = await Course.findById(id);
+    // if (!course) return;
+    // course.isPublished = true;
+    // course.author = 'Another Author';
+    // // Another equivalent approach
+    // // course.set({
+    // //     isPublished: true,
+    // //     author: 'Another Author'
+    // // })
+    // const result = await course.save();
+    // console.log(result);
+
+    // Approach: Update first
+    // Update directly
+    // Optionally: get the updated document
+
+    // This returns the result
+    // const result = await Course.updateOne({ _id: id }, {
+    //     $set: {
+    //         author: 'Alicia',
+    //         isPublished: false
+    //     }
+    // });
+    // console.log(result);
+
+    // This returns the original document
+    // const course = await Course.findByIdAndUpdate(id, {
+    //     $set: {
+    //         author: 'Jack',
+    //         isPublished: true
+    //     }
+    // });
+    // console.log(course);
+
+    // This returns the updated document
+    const course = await Course.findByIdAndUpdate(id, {
+        $set: {
+            author: 'Jason',
+            isPublished: false
+        }
+    }, {new: true});
+    console.log(course);
+}
+  
 // createCourse();
 
-getCourses();
+// getCourses();
+
+updateCourse('5dc88c10df341a1036191c47');
 
 
