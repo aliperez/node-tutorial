@@ -8,7 +8,10 @@ mongoose.connect('mongodb://localhost/playground', {
     .catch(err => console.error('Could not connect to MongoDB...', err));
 
 const courseSchema = new mongoose.Schema({
-    name: String,
+    //  This validation happens through mongoose only, mongo doesn't care about validation
+    // Joi is another npm package for validation, but use both, they compliment eachother, use Joi to validate the data from client
+    // Mongoose check programming errors
+    name: { type: String, required: true},
     author: String,
     tags: [ String ],
     date: { type: Date, default: Date.now },
@@ -21,14 +24,28 @@ const Course = mongoose.model('Course', courseSchema);
 async function createCourse() {
     // camel case bc course is an object 
     const course = new Course({
-        name: 'Fourth Course',
+        // name: 'Fourth Course',
         author: 'Mosh',
         tags: ['fourth', '4th'],
         isPublished: true
     });
     
-    const result = await course.save();
-    console.log(result);
+    // this assumes success
+    // const result = await course.save();
+    // console.log(result);
+
+    // use try catch instead
+    try {
+        // manually trigger validation, returns a promise of void, design flaw of Mongoose
+        // const isValid = await course.validate();
+        // console.log(isValid);
+        // original code:
+        const result = await course.save();
+        console.log(result);
+    }
+    catch (ex) {
+        console.log(ex.message);
+    }
 }
 
 async function getCourses() {
@@ -140,12 +157,12 @@ async function removeCourse(id) {
     console.log(course);
 }
   
-// createCourse();
+createCourse();
 
 // getCourses();
 
 // updateCourse('5dc88c10df341a1036191c47');
 
-removeCourse('5dc88c10df341a1036191c47');
+// removeCourse('5dc88c10df341a1036191c47');
 
 
