@@ -129,11 +129,23 @@ async function updateCourse(id) {
     }, {new: true});
     console.log(course);
 }
+
+async function removeCourse(id) {
+    // deleteOne finds the first one and deletes it
+    // const result = await Course.deleteOne({ _id: id });
+    // use to delete many
+    // const result = await Course.deleteMany({ _id: id });
+    // if the course doesn't exist, returns null
+    const course = await Course.findByIdAndRemove(id);
+    console.log(course);
+}
   
 // createCourse();
 
 // getCourses();
 
-updateCourse('5dc88c10df341a1036191c47');
+// updateCourse('5dc88c10df341a1036191c47');
+
+removeCourse('5dc88c10df341a1036191c47');
 
 
