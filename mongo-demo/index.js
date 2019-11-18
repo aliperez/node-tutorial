@@ -11,11 +11,29 @@ const courseSchema = new mongoose.Schema({
     //  This validation happens through mongoose only, mongo doesn't care about validation
     // Joi is another npm package for validation, but use both, they compliment eachother, use Joi to validate the data from client
     // Mongoose check programming errors
-    name: { type: String, required: true},
+    name: { 
+        type: String, 
+        required: true,
+        minlength: 5,
+        maxlength: 255
+        // match: /pattern/
+    },
+    category: {
+        type: String,
+        required: true,
+        enum: ['web', 'mobile', 'network']
+    },
     author: String,
     tags: [ String ],
     date: { type: Date, default: Date.now },
-    isPublished: Boolean
+    isPublished: Boolean,
+    price: {
+        type: Number,
+        // cannot use arrow function in this situation bc arrow  functions do not have their own "this" they use the "this" value of the enclosing execution context 
+        required: function() { return this.isPublished; },
+        min: 10,
+        max: 200
+    }
 });
 
 // pascal naming convention bc Course is a class not an object
@@ -24,10 +42,12 @@ const Course = mongoose.model('Course', courseSchema);
 async function createCourse() {
     // camel case bc course is an object 
     const course = new Course({
-        // name: 'Fourth Course',
+        name: 'Fourth Course',
+        category: '-',
         author: 'Mosh',
         tags: ['fourth', '4th'],
-        isPublished: true
+        isPublished: true,
+        price: 15
     });
     
     // this assumes success
