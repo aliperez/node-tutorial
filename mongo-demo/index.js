@@ -21,7 +21,10 @@ const courseSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['web', 'mobile', 'network']
+        enum: ['web', 'mobile', 'network'],
+        lowercase: true,
+        // uppercase: true,
+        trim: true
     },
     author: String,
     tags: {
@@ -45,7 +48,9 @@ const courseSchema = new mongoose.Schema({
         // cannot use arrow function in this situation bc arrow  functions do not have their own "this" they use the "this" value of the enclosing execution context 
         required: function() { return this.isPublished; },
         min: 10,
-        max: 200
+        max: 200,
+        get: v => Math.round(v),
+        set: v => Math.round(v)
     }
 });
 
@@ -55,12 +60,12 @@ const Course = mongoose.model('Course', courseSchema);
 async function createCourse() {
     // camel case bc course is an object 
     const course = new Course({
-        name: 'Fourth Course',
-        category: '-',
+        name: 'Brand New Course',
+        category: 'Web',
         author: 'Mosh',
-        tags: null,
+        tags: ['frontend'],
         isPublished: true,
-        price: 15
+        price: 15.8
     });
     
     // this assumes success
@@ -110,7 +115,7 @@ async function getCourses() {
 
     const courses = await Course
         // .find({})  
-        .find({ author: 'Mosh', isPublished: true })
+        .find({ _id: '5dd317a4e197ef50691e5c5b' })
         // .find({ price: { $gte: 10, $lte: 20 } })
         // .find({ price: { $in: [10, 15, 20] } })
         // .find()
@@ -122,14 +127,14 @@ async function getCourses() {
         // .find({ author: /Hamedani$/i })
         // contains Mosh
         // .find({ author: /.*Mosh.*/i })
-        .skip((pageNumber - 1) * pageSize)
-        .limit(pageSize) 
+        // .skip((pageNumber - 1) * pageSize)
+        // .limit(pageSize) 
         // ascending order: 1, descending order: -1
         .sort({ name: 1 })
         // get only the name and tag properties
-        .select({ name: 1, tags: 1 });
+        .select({ name: 1, tags: 1, price: 1 });
         // .count();
-    console.log(courses);
+    console.log(courses[0].price);
 }
 
 async function updateCourse(id) {
@@ -192,9 +197,9 @@ async function removeCourse(id) {
     console.log(course);
 }
   
-createCourse();
+// createCourse();
 
-// getCourses();
+getCourses();
 
 // updateCourse('5dc88c10df341a1036191c47');
 
