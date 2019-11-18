@@ -1,51 +1,60 @@
-
+const mongoose = require('mongoose');
 const Joi = require('joi');
 const express = require('express');
 const router = express.Router();
 
-const movies = [
-    {id: 1, name: "A Bug's Life", genre: "Family"},
-    {id: 2, name: "Idiocracy", genre: "Satire"},
-    {id: 3, name: "Sweeny Todd", genre: "Musical"}
-]
+const movieSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    genre: {
+        type: String,
+        required: true
+    },
+    date: { type: Date, default: Date.now }
+});
 
-router.get('/', (req,res) => {
+const Movie = mongoose.model('Movie', movieSchema);
+
+router.get('/', async (req, res) => {
+    const movies = await Movie.find().sort('name'); 
     res.send(movies);
 })
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const { error } = validateMovie(req.body);
     if (error) return res.status(400).send(error.details[0].message);
-    const movie = {
-        id: movies.length + 1,
+    let movie = new Movie ({
         name: req.body.name,
         genre: req.body.genre
-    }
-    movies.push(movie);
+    });
+    movie = await movie.save();
     res.send(movie);
 })
 
-router.get('/:genre', (req, res) => {
-    const movie = movies.find( c => c.genre.toLowerCase() === req.params.genre.toLowerCase());
+router.get('/:genre', async (req, res) => {
+    const movie = await Movie.findById(req.params.id);
     if (!movie) return res.status(404).send('There are no movies within the given genre.')
     res.send(movie);
 })
 
-router.put('/:id', (req, res) => {
-    const movie = movies.find( c => c.id === parseInt(req.params.id));
-    if (!movie) return res.status(404).send('There are no movies within the given id.')
+router.put('/:id', async (req, res) => {
     const { error } = validateMovie(req.body);
     if (error) return res.status(400).send(error.details[0].message);
-    movie.name = req.body.name;
-    movie.genre = req.body.genre;
+    const movie = await Movie.findByIdAndUpdate(req.params.id, {
+        name: req.body.name,
+        genre: req.body.genre
+    }, 
+    { new: true 
+    })
+    if (!movie) return res.status(404).send('There are no movies within the given id.')
     res.send(movie);
 })
 
-router.delete('/:id', (req, res) => {
-    const movie = movies.find( c => c.id === parseInt(req.params.id));
+router.delete('/:id', async(req, res) => {
+    const movie = await Movie.findByIdAndRemove(req.params.id);
     if (!movie) return res.status(404).send('There are no movies within the given id.')
-    const index = movies.indexOf(movie);
-    movies.splice(index, 1);
     res.send(movie);
 })
 
