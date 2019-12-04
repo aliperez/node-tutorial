@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-    const movies = await Movie.find().sort('name'); 
+    const movies = await Movie.find().sort('title'); 
     res.send(movies);
 });
 
@@ -11,16 +11,24 @@ router.post('/', async (req, res) => {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     let movie = new Movie ({
-        name: req.body.name,
-        genre: req.body.genre
+        title: req.body.title,
+        genre: req.body.genre,
+        numberInStock: req.body.numberInStock,
+        dailyRentalRate: req.body.dailyRentalRate
     });
     movie = await movie.save();
     res.send(movie);
 });
 
-router.get('/:genre', async (req, res) => {
-    const movie = await Movie.find({ genre: req.params.genre});
-    if (!movie || movie.length == 0) return res.status(404).send('There are no movies within the given genre.');
+// router.get('/:genre', async (req, res) => {
+//     const movie = await Movie.find({ genre: req.params.genre});
+//     if (!movie || movie.length == 0) return res.status(404).send('There are no movies within the given genre.');
+//     res.send(movie);
+// });
+
+router.get('/:id', async (req, res) => {
+    const movie = await Movie.findById(req.params.id);
+    if (!movie || movie.length == 0) return res.status(404).send('There are no movies within the given id.');
     res.send(movie);
 });
 
@@ -28,8 +36,10 @@ router.put('/:id', async (req, res) => {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     const movie = await Movie.findByIdAndUpdate(req.params.id, {
-        name: req.body.name,
-        genre: req.body.genre
+        title: req.body.title,
+        genre: req.body.genre,
+        numberInStock: req.body.numberInStock,
+        dailyRentalRate: req.body.dailyRentalRate
     }, 
     { 
         new: true 

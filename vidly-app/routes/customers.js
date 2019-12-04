@@ -19,9 +19,15 @@ router.post('/', async (req, res) => {
     res.send(customer);
 });
 
-router.get('/:phone', async (req, res) => {
-    const customer = await Customer.find({ phone: req.params.phone });
-    if (!customer || customer.length == 0) return res.status(404).send('There are no customers with the given phone number');
+// router.get('/:phone', async (req, res) => {
+//     const customer = await Customer.find({ phone: req.params.phone });
+//     if (!customer || customer.length == 0) return res.status(404).send('There are no customers with the given phone number');
+//     res.send(customer);
+// });
+
+router.get('/:id', async (req, res) => {
+    const customer = await Customer.findById(req.params.id);
+    if (!customer || customer.length == 0) return res.status(404).send('There are no customers with the given id');
     res.send(customer);
 });
 
