@@ -7,8 +7,7 @@ const genreSchema = new mongoose.Schema({
         required: true,
         minlength: 3,
         maxlength: 50
-    },
-    date: { type: Date, default: Date.now }
+    }
 });
 
 const Genre = mongoose.model('Genre', genreSchema);
