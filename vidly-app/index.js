@@ -15,9 +15,10 @@ const users = require('./routes/users');
 const auth = require('./routes/auth');
 const app = express(); 
 
-process.on('uncaughtException', (ex) => {
-    console.log('WE GOT AN UNCAUGHT EXCEPTION');
-    winston.error(ex.message, ex);
+winston.handleExceptions(new winston.transports.File({ filename: 'uncaughtExceptions.log' }));
+
+process.on('unhandledRejection', (ex) => {
+    throw ex;
 });
 
 winston.add(new winston.transports.File({ filename: "logfile.log" }));
@@ -26,8 +27,11 @@ winston.add(new winston.transports.MongoDB({
     level: 'error'
 }));
 
-// Continue Here!
-// const p = Promise.reject(new Error('Something'))
+// Pretend this is a failed call to a db or something
+const p = Promise.reject(new Error('Something failed miserably!'));
+// This is an unhandled rejection bc there is no "catch"
+p.then(() => console.log('Done'));
+
 
 if (!config.get('jwtPrivateKey')) {
     console.error('FATAL ERROR: jwtPrivateKey is not defined.');
